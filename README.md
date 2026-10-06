@@ -19,13 +19,14 @@ Most of this lives in private client repositories.
 
 ## How I work
 
-I build with Claude Code as my main tool. I set the direction and approve the spec, direct the agents, and review and test what they produce. Work counts once it is proven on the live service, not when it is committed.
+I build with Claude Code as my main tool. I set the direction and approve the spec, direct the agents, and review and test what they produce.
 
 ## The tooling behind the work
 
 I run my own engineering the way I would run AI tooling for a team:
 
-- Checks run from hooks, so they work without anyone remembering them. I built them after agents made unreliable claims about the state of my own environment.
+- Checks run from hooks at every session start, so they work without anyone remembering them. Each reports clean, drift or cannot-look, and a check that cannot measure never passes as clean. I built them after agents made unreliable claims about the state of my own environment.
+- Work counts only once it is proven on the live service: each session opens by checking the deployed revision against the latest commit, and one pipeline asserts the commit actually serving in production.
 - In the tool that keeps my written claims true, each rule counts only after it has caught a violation planted on purpose.
 - Parallel build sessions run under a watch session that builds nothing and checks what is deployed against what was merged, and an independent auditor on a different model re-checks the watch.
 - AI graders are calibrated before they are trusted, and agents are evaluated on fixed test sets with cost tracked per run. One measurement removed a caching layer and roughly halved the cost.
